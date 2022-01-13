@@ -1,12 +1,11 @@
 <?php
 
+use App\Models\Task;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Priority;
-use App\Models\Task;
-
-class CreatePriorityTaskTable extends Migration
+use App\Models\User;
+class CreateUserTask extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +14,9 @@ class CreatePriorityTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('priority_task', function (Blueprint $table) {
+        Schema::create('task_user', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->foreignIdFor(Priority::class);
+            $table->foreignIdFor(User::class);
             $table->foreignIdFor(Task::class);
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreatePriorityTaskTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('priority_task');
+        Schema::dropIfExists('user_task');
     }
 }

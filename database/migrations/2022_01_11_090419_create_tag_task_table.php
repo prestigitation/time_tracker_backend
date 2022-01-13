@@ -17,8 +17,8 @@ class CreateTagTaskTable extends Migration
     {
         Schema::create('tag_task', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->foreignIdFor(Task::class);
             $table->foreignIdFor(Tag::class);
+            $table->foreignIdFor(Task::class);
             $table->timestamps();
         });
     }

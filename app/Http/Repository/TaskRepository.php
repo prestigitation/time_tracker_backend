@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TaskRepository {
     public static function validated(Request $request): array
@@ -41,11 +43,11 @@ class TaskRepository {
         } else return [];
     }
 
-    public static function createTask(Request $request)
+    public static function createTask(Request $request): void
     {
         $taskRequest = $request->get('task');
         $files = $request->file('files');
-        if(count($files) > 0) {
+        if($files && count($_FILES) > 0) {
             $filePaths = [];
             foreach($files as $file) {
                 $uploadedFilePath = $file->store('tasks', 'public');
@@ -55,9 +57,10 @@ class TaskRepository {
         $task = new Task();
         $task->description = $taskRequest->description;
         $task->title = $taskRequest->title;
-        //$task->ended_at = $taskRequest->ended_at;
+        $task->ended_at = Carbon::parse($taskRequest->ended_at)->toDateTimeString();
         $task->subtasks = json_encode($request->get('subtasks')) ?? [];
         $task->files = json_encode($filePaths) ?? [];
+        $task->users()->attach(Auth::user());
         $task->save();
     }
 }
