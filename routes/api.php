@@ -3,7 +3,9 @@
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\JsonResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +17,13 @@ use App\Http\Controllers\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('csrf', function() {
+    return new JsonResponse(['token' => csrf_token()]);
 });
+
 Route::prefix('auth')->group(function () {
-    Route::post('login', 'App\Http\Controllers\AuthController@login');
-    Route::post('register', 'App\Http\Controllers\AuthController@register');
-    Route::post('logout', 'App\Http\Controllers\AuthController@logout');
+    Route::post('login', 'App\Http\Controllers\AuthController@login')->name('login')->middleware('web');
+    Route::post('register', 'App\Http\Controllers\AuthController@register')->name('register');
+    Route::post('logout', 'App\Http\Controllers\AuthController@logout')->name('logout');
 });
 Route::apiResource('task', TaskController::class);
