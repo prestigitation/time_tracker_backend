@@ -13,7 +13,7 @@ class CreatePriorityTable extends Migration
      */
     public function up()
     {
-        Schema::create('priority', function (Blueprint $table) {
+        Schema::create('priorities', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
             $table->string('color', 255);
             $table->string('title', 255);

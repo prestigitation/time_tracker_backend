@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Priority;
 
 class TaskRepository {
     public static function validated(Request $request): array
@@ -47,8 +48,9 @@ class TaskRepository {
     {
         $taskRequest = $request->get('task');
         $files = $request->file('files');
+        $filePaths = [];
+        $priorityId = Priority::find(1)->id;
         if($files && count($_FILES) > 0) {
-            $filePaths = [];
             foreach($files as $file) {
                 $uploadedFilePath = $file->store('tasks', 'public');
                 array_push($filePaths, $uploadedFilePath);
@@ -60,7 +62,10 @@ class TaskRepository {
         $task->ended_at = Carbon::parse($taskRequest->ended_at)->toDateTimeString();
         $task->subtasks = json_encode($request->get('subtasks')) ?? [];
         $task->files = json_encode($filePaths) ?? [];
-        $task->users()->attach(Auth::user());
+        $task->priority_id = $priorityId;
+
         $task->save();
+
+        $task->users()->attach(Auth::user());
     }
 }

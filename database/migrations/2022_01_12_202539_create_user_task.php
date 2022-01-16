@@ -16,8 +16,10 @@ class CreateUserTask extends Migration
     {
         Schema::create('task_user', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Task::class);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('task_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('task_id')->references('id')->on('tasks');
             $table->timestamps();
         });
     }

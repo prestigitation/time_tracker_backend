@@ -12,15 +12,6 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        /*$credentials = $request->validated();
-        if(Auth::attempt($credentials, true)) {
-            $user = User::select(['id', 'name'])->where('email', '=', $credentials['email'])->first();
-            return new JsonResponse([
-                'login' => $user->name,
-                'id' => $user->id,
-            ]);
-        } else return new JsonResponse(['message' => 'Не удалось войти'], 403);*/
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6',
@@ -36,27 +27,17 @@ class AuthController extends Controller
                 $response = ['token' => $token, 'login' => $user->name, 'id' => $user->id];
                 return response($response, 200);
             } else {
-                $response = ["message" => "Password mismatch"];
+                $response = ["message" => __('auth.password')];
                 return response($response, 422);
             }
         } else {
-            $response = ["message" =>'User does not exist'];
+            $response = ["message" => __('auth.not_exist')];
             return response($response, 422);
         }
     }
 
     public function register(Request $request)
     {
-        /*$credentials = $request->validated();
-        if($credentials) {
-            $newUser = UserRepository::createUser($credentials);
-            return new JsonResponse([
-                'id' => $newUser->id,
-                'login' => $newUser->name
-            ]);
-        }
-        return new JsonResponse(['message' => 'Не удалось зарегистрироваться.'], 422);*/
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -74,8 +55,8 @@ class AuthController extends Controller
         return response($response, 200);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        return Auth::logout();
+        return $request->user()->token()->revoke();
     }
 }

@@ -17,6 +17,8 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
+            $table->unsignedBigInteger('priority_id')->nullable();
+            $table->foreign('priority_id')->references('id')->on('priorities');
             $table->string('title', 255);
             $table->text('description');
             $table->json('files');
