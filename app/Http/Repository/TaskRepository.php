@@ -46,7 +46,7 @@ class TaskRepository {
 
     public static function createTask(Request $request): void
     {
-        $taskRequest = $request->get('task');
+        $taskRequest = $request->task;
         $files = $request->file('files');
         $filePaths = [];
         $priorityId = Priority::find(1)->id;
@@ -56,16 +56,18 @@ class TaskRepository {
                 array_push($filePaths, $uploadedFilePath);
             }
         }
-        $task = new Task();
-        $task->description = $taskRequest->description;
-        $task->title = $taskRequest->title;
-        $task->ended_at = Carbon::parse($taskRequest->ended_at)->toDateTimeString();
-        $task->subtasks = json_encode($request->get('subtasks')) ?? [];
-        $task->files = json_encode($filePaths) ?? [];
-        $task->priority_id = $priorityId;
+        $task = Task::create([
+            'description' => $taskRequest->description,
+            'title' => $taskRequest->title,
+            'ended_at' => Carbon::parse($taskRequest->ended_at)->toDateTimeString() ?? null,
+            'subtasks' => json_encode($request->get('subtasks')) ?? [],
+            'files' => json_encode($filePaths) ?? [],
+            'priority_id' => $priorityId ?? null
+        ]);
 
-        $task->save();
 
-        $task->users()->attach(Auth::user());
+        if(Auth::user()) {
+            $task->users()->attach(Auth::user());
+        }
     }
 }

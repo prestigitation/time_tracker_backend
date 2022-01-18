@@ -11,6 +11,10 @@ class Priority extends Model
 
     public function task()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsToMany(Task::class);
     }
+
+    protected $hidden = [
+        'priority_id'
+    ];
 }

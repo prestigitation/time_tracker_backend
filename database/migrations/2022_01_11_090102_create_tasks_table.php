@@ -2,6 +2,7 @@
 
 use App\Models\Priority;
 use App\Models\Tag;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,7 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->json('files');
             $table->json('subtasks');
+            $table->time('spent_time')->default(Carbon::createFromTime(0,0,0)->format('HHH:MM:SS'));
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
         });

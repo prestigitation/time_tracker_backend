@@ -8,10 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'description',
+        'title',
+        'ended_at',
+        'subtasks',
+        'files',
+        'priority_id'
+    ];
     public function priority()
     {
-        return $this->hasOne(Priority::class);
+        return $this->belongsTo(Priority::class);
     }
 
     public function tags()

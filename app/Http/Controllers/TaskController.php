@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -21,7 +22,8 @@ class TaskController extends Controller
         $userId = Auth::id();
         return Task::whereHas('users', function($query) use ($userId) {
             return $query->where('user_id', '=', $userId);
-        })->get();
+        })->with('priority')->get();
+
     }
 
     /**
@@ -78,6 +80,8 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Gate::allows('modify_post')) {
+            Task::find($id)->delete();
+        }
     }
 }
