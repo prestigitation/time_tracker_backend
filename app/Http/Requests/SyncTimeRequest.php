@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class StoreTaskRequest extends FormRequest
+class SyncTimeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StoreTaskRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user();
     }
 
     /**
@@ -24,10 +25,8 @@ class StoreTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:2|max:255|',
-            'description' => 'required|string|min:2|max:255|',
-            'hours' => 'required',
-            'priority' => 'numeric|required'
+            'id' => 'int|required',
+            'value' => 'string|required'
         ];
     }
 }

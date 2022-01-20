@@ -15,8 +15,8 @@ class CreatePriorityTable extends Migration
     {
         Schema::create('priorities', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->string('color', 255);
             $table->string('title', 255);
+            $table->string('color', 255);
             $table->timestamps();
         });
     }

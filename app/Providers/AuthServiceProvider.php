@@ -26,15 +26,16 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
 
 
         if (!$this->app->routesAreCached()) {
             Passport::routes();
         }
 
+        $this->registerPolicies();
+
         Gate::define('modify_post', function (User $user, Task $task) {
-            return in_array($user, $task->users()->toArray());
+            return !in_array($user, $task->users->toArray());
         });
     }
 }

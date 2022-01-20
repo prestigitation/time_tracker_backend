@@ -24,7 +24,8 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->json('files');
             $table->json('subtasks');
-            $table->time('spent_time')->default(Carbon::createFromTime(0,0,0)->format('HHH:MM:SS'));
+            $table->time('spent_time')->default('00:00:00');
+            $table->unsignedBigInteger('hours')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
         });

@@ -14,7 +14,8 @@ class Task extends Model
         'ended_at',
         'subtasks',
         'files',
-        'priority_id'
+        'priority_id',
+        'hours'
     ];
     public function priority()
     {
@@ -23,7 +24,7 @@ class Task extends Model
 
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
 
     public function users()

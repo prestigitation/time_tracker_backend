@@ -17,10 +17,8 @@ class CreateTagTaskTable extends Migration
     {
         Schema::create('tag_task', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->unsignedBigInteger('tag_id');
-            $table->unsignedBigInteger('task_id');
-            $table->foreign('tag_id')->references('id')->on('tags');
-            $table->foreign('task_id')->references('id')->on('tasks');
+            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
+            $table->foreignId('task_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

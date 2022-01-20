@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repository\TaskRepository;
+use App\Http\Requests\SyncTimeRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +23,6 @@ class TaskController extends Controller
         return Task::whereHas('users', function($query) use ($userId) {
             return $query->where('user_id', '=', $userId);
         })->with('priority')->get();
-
     }
 
     /**
@@ -80,8 +79,14 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        if(Gate::allows('modify_post')) {
-            Task::find($id)->delete();
-        }
+        $task = Task::find($id);
+        if(Gate::allows('modify_post', $task)) {
+            return TaskRepository::deleteTask($task);
+        } else return new JsonResponse(['message' => 'Нету необходимых прав для удаления задачи'], 403);
+    }
+
+    public function syncTaskTime(SyncTimeRequest $request)
+    {
+        return TaskRepository::syncTime($request->validated());
     }
 }

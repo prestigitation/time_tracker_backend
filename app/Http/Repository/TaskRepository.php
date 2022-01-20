@@ -8,7 +8,7 @@ use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Priority;
-
+use Illuminate\Support\Facades\Storage;
 class TaskRepository {
     public static function validated(Request $request): array
     {
@@ -49,10 +49,9 @@ class TaskRepository {
         $taskRequest = $request->task;
         $files = $request->file('files');
         $filePaths = [];
-        $priorityId = Priority::find(1)->id;
         if($files && count($_FILES) > 0) {
             foreach($files as $file) {
-                $uploadedFilePath = $file->store('tasks', 'public');
+                $uploadedFilePath = Storage::path($file->store('tasks', 'public'));
                 array_push($filePaths, $uploadedFilePath);
             }
         }
@@ -62,12 +61,27 @@ class TaskRepository {
             'ended_at' => Carbon::parse($taskRequest->ended_at)->toDateTimeString() ?? null,
             'subtasks' => json_encode($request->get('subtasks')) ?? [],
             'files' => json_encode($filePaths) ?? [],
-            'priority_id' => $priorityId ?? null
+            'hours' => $taskRequest->hours,
+            'priority_id' => (int) $taskRequest->priority
         ]);
 
 
         if(Auth::user()) {
             $task->users()->attach(Auth::user());
         }
+    }
+
+    public static function syncTime(array $validatedSyncTime)
+    {
+        $task = Task::find($validatedSyncTime['id']);
+        $task->spent_time = $validatedSyncTime['value'];
+        $task->save();
+    }
+
+    public static function deleteTask(Task $task)
+    {
+        $task->users()->detach();
+        $task->tags()->detach();
+        $task->delete();
     }
 }

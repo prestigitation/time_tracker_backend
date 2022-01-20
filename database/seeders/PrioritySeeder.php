@@ -7,7 +7,7 @@ use App\Models\Priority;
 enum PriorityColors : string {
     case NO_PRIORITY = 'gray';
     case LOW = 'green';
-    case MEDIUM = 'yellow';
+    case MEDIUM = '#e8ce68';
     case HIGH = 'red';
 }
 class PrioritySeeder extends Seeder
