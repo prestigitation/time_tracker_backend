@@ -89,4 +89,13 @@ class TaskController extends Controller
     {
         return TaskRepository::syncTime($request->validated());
     }
+
+    public function addFile(int $taskId, Request $request)
+    {
+        $task = Task::findOrFail($taskId);
+        if(Gate::allows('modify_post', $task)) {
+            TaskRepository::addFile($task, $request);
+            return new JsonResponse(['message' => 'Файл был успешно добавлен']);
+        } else return new JsonResponse(['message' => 'Нету необходимых прав для удаления задачи'], 403);
+    }
 }

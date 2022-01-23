@@ -32,6 +32,7 @@ Route::apiResource('task', TaskController::class);
 
 Route::prefix('task')->group(function() {
     Route::post('sync_time', 'App\Http\Controllers\TaskController@syncTaskTime')->name('task.sync_time');
+    Route::post('/{id}/file', 'App\Http\Controllers\TaskController@addFile')->name('task.add_file');
 });
 
 Route::apiResource('priority', PriorityController::class);
