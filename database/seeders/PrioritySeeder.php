@@ -4,12 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Priority;
-enum PriorityColors : string {
-    case NO_PRIORITY = 'gray';
-    case LOW = 'green';
-    case MEDIUM = '#e8ce68';
-    case HIGH = 'red';
-}
+use App\Models\PriorityColors;
+
 class PrioritySeeder extends Seeder
 {
     /**

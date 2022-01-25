@@ -7,10 +7,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Priority;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\FileBag;
 
 class TaskRepository {
     public static function validated(Request $request): array
@@ -91,10 +88,12 @@ class TaskRepository {
     public static function addFile(Task $task, Request $request)
     {
         $file = $request->file('file');
-        $fileLink = asset(Storage::url($file->store('tasks', 'public')));
-        $taskFiles = json_decode($task->files);
-        array_push($taskFiles, $fileLink);
-        $task->files = array_unique($taskFiles);
-        $task->save();
+        if($file) {
+            $fileLink = asset(Storage::url($file->store('tasks', 'public')));
+            $taskFiles = json_decode($task->files);
+            array_push($taskFiles, $fileLink);
+            $task->files = array_unique($taskFiles);
+            $task->save();
+        }
     }
 }

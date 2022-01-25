@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PriorityController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\JsonResponse;
 
 /*
@@ -36,5 +37,7 @@ Route::prefix('task')->group(function() {
 });
 
 Route::apiResource('priority', PriorityController::class);
+
+Route::apiResource('tag', TagController::class);
 
 
