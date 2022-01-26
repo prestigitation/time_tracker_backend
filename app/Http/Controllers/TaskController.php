@@ -19,10 +19,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $userId = Auth::id();
-        return Task::whereHas('users', function($query) use ($userId) {
-            return $query->where('user_id', '=', $userId);
-        })->with('priority')->get();
+        return TaskRepository::getAllTasks();
     }
 
     /**

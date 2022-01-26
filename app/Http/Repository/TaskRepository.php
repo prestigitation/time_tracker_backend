@@ -4,12 +4,22 @@ namespace App\Http\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreTaskRequest;
+use App\Models\Tag;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TaskRepository {
+
+    public static function getAllTasks()
+    {
+        $userId = Auth::id();
+        return Task::whereHas('users', function($query) use ($userId) {
+            return $query->where('user_id', '=', $userId);
+        })->with(['priority', 'tags'])->get();
+    }
+
     public static function validated(Request $request): array
     {
         $taskRequest = new StoreTaskRequest();
@@ -64,6 +74,13 @@ class TaskRepository {
             'hours' => $taskRequest->hours,
             'priority_id' => (int) $taskRequest->priority
         ]);
+
+        foreach($taskRequest->selected_tags as $tag) {
+            $selectedTag = Tag::find($tag->id);
+            if($selectedTag) {
+                $task->tags()->attach($selectedTag);
+            }
+        }
 
 
         if(Auth::user()) {
