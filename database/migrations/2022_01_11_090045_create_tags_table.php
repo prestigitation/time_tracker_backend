@@ -16,7 +16,6 @@ class CreateTagsTable extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
             $table->string('color', 255);
-            $table->string('text_color', 255)->default('white');
             $table->string('title', 255);
             $table->timestamps();
         });
